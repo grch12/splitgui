@@ -1,12 +1,21 @@
 #include "global.h"
 
-size_t flength(FILE *file) {
+size_t flength(FILE* file) {
 	fpos_t fpos;
 	fgetpos(file, &fpos);
 	fseek(file, 0, SEEK_END);
 	size_t n = ftell(file);
 	fsetpos(file, &fpos);
 	return n;
+}
+
+bool file_exist(char* filename) {
+	FILE* testfile = fopen(filename, "r");
+	bool result;
+	if (testfile) result = true;
+	else result = false;
+	fclose(testfile);
+	return result;
 }
 
 int split_file_by_amount(FILE* source, char* original_name, int amount) {
@@ -16,6 +25,8 @@ int split_file_by_amount(FILE* source, char* original_name, int amount) {
 	// Calculate size
 	size_t n = length - each_fsize * amount;
 
+	bool skipped = false;
+	
 	// Use For-Loop to write files
 	for (int i = 0; i < amount; i++) {
 		// New filename
@@ -28,6 +39,15 @@ int split_file_by_amount(FILE* source, char* original_name, int amount) {
 		char number[11] = { '\0' };
 		sprintf(number, "%d", i + 1);
 		strcat(newfn, number);
+		
+		if (file_exist(newfn) && !skipped)
+		{
+			char info[strlen(newfn) + 18];
+			sprintf(info, "%s已存在\n是否覆盖？", newfn);
+			int choice = IupAlarm(newfn, info, "是", "全是", "否");
+			if (choice == 3) return -3;
+			else if (choice == 2) skipped = true;
+		}
 
 		// Open new file
 		FILE* newfile = fopen(newfn, "wb");
@@ -60,6 +80,8 @@ int split_file_by_size(FILE* source, char* original_name, size_t size) {
 	size_t length = flength(source);
 	size_t amount = length / size;
 	if (length % size != 0) amount++;
+	
+	bool skipped = false;
 
 	// Use For-Loop to write files
 	for (int i = 0; i < amount; i++) {
@@ -73,6 +95,15 @@ int split_file_by_size(FILE* source, char* original_name, size_t size) {
 		char number[11] = { '\0' };
 		sprintf(number, "%d", i + 1);
 		strcat(newfn, number);
+		
+		if (file_exist(newfn) && !skipped)
+		{
+			char info[strlen(newfn) + 18];
+			sprintf(info, "%s已存在\n是否覆盖？", newfn);
+			int choice = IupAlarm(newfn, info, "是", "全是", "否");
+			if (choice == 3) return -3;
+			else if (choice == 2) skipped = true;
+		}
 
 		// Open new file
 		FILE* newfile = fopen(newfn, "wb");
@@ -108,6 +139,14 @@ int merge_file(char* name) {
 
 	FILE* first_file = fopen(first_filename, "rb");
 	if (!first_file) return -1;
+	
+	if (file_exist(name))
+	{
+		char info[strlen(name) + 18];
+		sprintf(info, "%s已存在\n是否覆盖？", name);
+		int choice = IupAlarm(name, info, "  是  ", "  否  ", NULL);
+		if (choice == 2) return -4;
+	}
 
 	FILE* original_file = fopen(name, "wb");
 	if (!original_file) return -3;

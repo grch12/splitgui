@@ -5,6 +5,8 @@
 
 size_t flength(FILE* file);
 
+bool file_exist(char* filename);
+
 int split_file_by_amount(FILE* source, char* original_name, int amount);
 int split_file_by_size(FILE* source, char* original_name, size_t size);
 

@@ -73,11 +73,17 @@ int split_ok_cb(Ihandle* dlg)
 	if (result != 0)
 	{
 		if (result == -1) IupMessageError(dlg, "无法分配空间，可能是内存不足");
-		if (result == -2) {
+		else if (result == -2)
+		{
 			char errmsg[256] = { '\0'};
 			sprintf(errmsg, "%s%s", "无法创建新文件，原因：", strerror(errno));
 			IupMessageError(dlg, errmsg);
-		};
+		}
+		else if (result == -3)
+		{
+			IupMessage("操作未完成", "操作被用户取消");
+			return IUP_DEFAULT;
+		}
 	}
 	else
 	{
@@ -144,11 +150,17 @@ int merge_ok_cb(Ihandle* dlg)
 		IupMessageError(dlg, "无法分配空间，可能是内存不足");
 		return IUP_DEFAULT;
 	}
-	else if (result == -3) {
+	else if (result == -3)
+	{
 		char errmsg[256] = { '\0'};
 		sprintf(errmsg, "%s%s", "无法创建文件，原因：", strerror(errno));
 		
 		IupMessageError(dlg, errmsg);
+		return IUP_DEFAULT;
+	}
+	else if (result == -4)
+	{
+		IupMessage("操作未完成", "操作被用户取消");
 		return IUP_DEFAULT;
 	}
 	

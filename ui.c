@@ -39,6 +39,8 @@ Ihandle* split_tab()
 	IupSetAttribute(size_select, "1", "B");
 	IupSetAttribute(size_select, "2", "KiB");
 	IupSetAttribute(size_select, "3", "MiB");
+	IupSetAttribute(size_select, "4", "GiB");
+	IupSetAttribute(size_select, "5", "TiB");
 	IupSetInt(size_select, "VALUE", 1);
 	
 	size_box = IupHbox(as_size, size_text, size_select, NULL);
@@ -115,7 +117,7 @@ Ihandle* about_tab()
 	IupSetAttribute(license, "MULTILINE", "YES");
 	IupSetAttribute(license, "EXPAND", "YES");
 	IupSetAttribute(license, "READONLY", "YES");
-	IupSetAttribute(license, "FONT", "Consolas, 10");
+	IupSetAttribute(license, "FONT", "Consolas, 8");
 	IupSetAttribute(license, "VALUE", "splitgui\n\n\
 MIT License\n\n\
 Copyright (c) 2024 grch12\n\n\

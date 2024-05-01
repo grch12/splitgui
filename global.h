@@ -6,6 +6,7 @@
 #include <math.h>
 #include <string.h>
 #include <errno.h>
+#include <stdbool.h>
 
 #include "C:/Users/grch/Documents/projects/Project2/include/iup.h"
 

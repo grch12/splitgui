@@ -7,7 +7,7 @@ int main(int argc, char** argv)
 	Ihandle* tabs = IupTabs(split_tab(), merge_tab(), about_tab(), NULL);
 	IupSetAttribute(tabs, "TABTITLE0", "分割");
 	IupSetAttribute(tabs, "TABTITLE1", "合并");
-	IupSetAttribute(tabs, "TABTITLE2", "关于");
+	IupSetAttribute(tabs, "TABTITLE2", "关于"); 
 	
 	Ihandle* mw = IupDialog(tabs);
 	
