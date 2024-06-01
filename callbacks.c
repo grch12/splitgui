@@ -134,7 +134,7 @@ int merge_ok_cb(Ihandle* dlg)
 	
 	char* original_name = malloc(strlen(filename) + 1 - 2);
 	memset(original_name, '\0', strlen(filename) + 1 - 2);
-	strncpy(original_name, filename, strlen(filename) - 2);
+	memcpy(original_name, filename, strlen(filename) - 2);
 	
 	int result = merge_file(original_name);
 	if (result == -1)

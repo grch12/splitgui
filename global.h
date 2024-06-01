@@ -8,7 +8,7 @@
 #include <errno.h>
 #include <stdbool.h>
 
-#include "C:/Users/grch/Documents/projects/Project2/include/iup.h"
+#include <iup.h>
 
 #include "callbacks.h"
 #include "fileutils.h"

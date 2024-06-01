@@ -1,5 +1,11 @@
 #include "global.h"
 
+int drop_file_cb(Ihandle* ih, const char* filename)
+{
+	IupSetStrAttribute(ih, "VALUE", filename);
+	return IUP_IGNORE;
+}
+
 Ihandle* split_tab()
 {
 	Ihandle* vbox, * filename_box, * amount_box, * size_box, * size_select;
@@ -58,6 +64,7 @@ Ihandle* split_tab()
 	IupSetAttribute(filename_box, "EXPAND", "HORIZONTAL");
 	IupSetAttribute(filename_text, "EXPAND", "HORIZONTAL");
 	IupSetAttribute(filename_text, "NAME", "FILENAME_TEXT");
+	IupSetCallback(filename_text, "DROPFILES_CB", (Icallback)drop_file_cb);
 	
 	IupSetAttribute(browse_btn, "PADDING", "5x");
 	IupSetCallback(browse_btn, "ACTION", (Icallback)split_browse_cb);
@@ -87,6 +94,7 @@ Ihandle* merge_tab()
 	IupSetAttribute(filename_box, "EXPAND", "HORIZONTAL");
 	IupSetAttribute(filename_text, "EXPAND", "HORIZONTAL");
 	IupSetAttribute(filename_text, "NAME", "MERGE_TEXT");
+	IupSetCallback(filename_text, "DROPFILES_CB", (Icallback)drop_file_cb);
 	
 	IupSetAttribute(browse_btn, "PADDING", "5x");
 	IupSetCallback(browse_btn, "ACTION", (Icallback)merge_browse_cb);
