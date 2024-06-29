@@ -173,3 +173,58 @@ SOFTWARE.\
 	
 	return vbox;
 }
+
+void* split_process_show_dialog(void *pvoid)
+{
+	char label_text[100] = { '\0' };
+	snprintf(label_text, 100, "0/%llu", split_total);
+	split_process_label = IupLabel(label_text);
+	Ihandle* dlg = IupDialog(IupVbox(IupLabel("分割中..."), split_process_label, NULL));
+	IupSetAttribute(dlg, "MENUBOX", "NO");
+	IupSetAttribute(dlg, "MAXBOX", "NO");
+	IupSetAttribute(dlg, "MINBOX", "NO");
+	IupSetAttribute(dlg, "RESIZE", "NO");
+	IupSetAttribute(dlg, "SIZE", "100x30");
+	IupSetAttribute(dlg, "SIMULATEMODAL", "YES");
+	IupShowXY(dlg, IUP_CENTER, IUP_MOUSEPOS);
+	while (split_processed != split_total) {
+		IupLoopStepWait();
+	}
+	return NULL;
+}
+
+pthread_t split_process_indicator()
+{
+	split_processed = 0;
+	pthread_t thread;
+	pthread_create(&thread, NULL, split_process_show_dialog, NULL);
+	return thread;
+}
+
+void* merge_process_show_dialog(void *pvoid)
+{
+	char label_text[100] = { '\0' };
+	snprintf(label_text, 100, "已合并%llu个", 0llu);
+	merge_process_label = IupLabel(label_text);
+	Ihandle* dlg = IupDialog(IupVbox(IupLabel("合并中..."), merge_process_label, NULL));
+	IupSetAttribute(dlg, "MENUBOX", "NO");
+	IupSetAttribute(dlg, "MAXBOX", "NO");
+	IupSetAttribute(dlg, "MINBOX", "NO");
+	IupSetAttribute(dlg, "RESIZE", "NO");
+	IupSetAttribute(dlg, "SIZE", "100x30");
+	IupSetAttribute(dlg, "SIMULATEMODAL", "YES");
+	IupShowXY(dlg, IUP_CENTER, IUP_MOUSEPOS);
+	while (should_continue) {
+		IupLoopStepWait();
+	}
+	return NULL;
+}
+
+pthread_t merge_process_indicator()
+{
+	merge_processed = 0;
+	should_continue = true;
+	pthread_t thread;
+	pthread_create(&thread, NULL, merge_process_show_dialog, NULL);
+	return thread;
+}

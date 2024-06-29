@@ -19,6 +19,7 @@ bool file_exist(char* filename) {
 }
 
 int split_file_by_amount(FILE* source, char* original_name, int amount) {
+	split_total = amount;
 	size_t length = flength(source);
 	size_t each_fsize = length / amount;
 
@@ -26,6 +27,8 @@ int split_file_by_amount(FILE* source, char* original_name, int amount) {
 	size_t n = length - each_fsize * amount;
 
 	bool skipped = false;
+	
+	pthread_t thread = split_process_indicator();
 	
 	// Use For-Loop to write files
 	for (int i = 0; i < amount; i++) {
@@ -71,8 +74,10 @@ int split_file_by_amount(FILE* source, char* original_name, int amount) {
 		// Close file & free memory used
 		fclose(newfile);
 		free(content);
+		split_progress_increase();
 	}
 
+	pthread_join(thread, NULL);
 	return 0;
 }
 
@@ -81,7 +86,11 @@ int split_file_by_size(FILE* source, char* original_name, size_t size) {
 	size_t amount = length / size;
 	if (length % size != 0) amount++;
 	
+	split_total = amount;
+	
 	bool skipped = false;
+	
+	pthread_t thread = split_process_indicator();
 
 	// Use For-Loop to write files
 	for (int i = 0; i < amount; i++) {
@@ -126,8 +135,10 @@ int split_file_by_size(FILE* source, char* original_name, size_t size) {
 		// Close file & free memory used
 		fclose(newfile);
 		free(content);
+		split_progress_increase();
 	}
 
+	pthread_join(thread, NULL);
 	return 0;
 }
 
@@ -162,6 +173,7 @@ int merge_file(char* name) {
 
 	size_t file_count = 2;
 
+	pthread_t thread = merge_process_indicator();
 	while (1) {
 		char filename[name_length + 12];
 		strcpy(filename, name);
@@ -183,7 +195,9 @@ int merge_file(char* name) {
 		fclose(file);
 
 		file_count++;
+		merge_progress_increase();
 	}
+	should_continue = false;
 
 	fclose(original_file);
 	return 0;

@@ -1,5 +1,15 @@
 #include "global.h"
 
+size_t split_processed = 0;
+size_t split_total = 0;
+Ihandle* split_process_label = NULL;
+
+size_t merge_processed = 0;
+bool should_continue = false;
+Ihandle* merge_process_label = NULL;
+
+Ihandle* mw = NULL;
+
 int main(int argc, char** argv)
 {
 	IupOpen(&argc, &argv);
@@ -9,7 +19,7 @@ int main(int argc, char** argv)
 	IupSetAttribute(tabs, "TABTITLE1", "合并");
 	IupSetAttribute(tabs, "TABTITLE2", "关于"); 
 	
-	Ihandle* mw = IupDialog(tabs);
+	mw = IupDialog(tabs);
 	
 	IupSetAttribute(mw, "TITLE", "文件分割/合并 by GitHub@grch12");
 	IupSetAttribute(mw, "SIZE", "240x120");
